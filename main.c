@@ -19,7 +19,7 @@ int main(int argc, char* argv[]){
 
 	//set parent's CPU to CPU_0
 	AssignCpu(getpid(), 0);
-	//set high priority
+	//set high priority for parent
 	WakeUp(getpid());
 
 	//IO
