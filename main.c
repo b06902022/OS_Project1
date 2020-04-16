@@ -87,14 +87,12 @@ int main(int argc, char* argv[]){
 							requirement = job[i].execTime - job[i].progress;
 						}
 					}
-                    fprintf(stderr, "job %d starts\n", running);
 					job[running].pid = newChild(job[running]); //fork a new child
                 }
                 else{;} //no job is ready
             }
             else{ //some thing is running
                 if(job[running].progress >= job[running].execTime){ //the running job finished
-                    fprintf(stderr, "job %d finishes, Its pid = %d\n", running, job[running].pid);
 					if(running == next){ //update the next task
 						while(next < numberOfProcess && job[next].progress >= job[next].execTime){
 							next = next + 1;
@@ -109,7 +107,6 @@ int main(int argc, char* argv[]){
                 }
                 else{;} //the running job keep running
             }
-            fprintf(stderr, "time = %d next = %d\n", time, next);
             busy();
             time++;
             job[running].progress++;
@@ -138,12 +135,10 @@ int main(int argc, char* argv[]){
 						}
 					}
 					if(job[running].progress == 0){
-                 		fprintf(stderr, "job %d starts\n", running);
 						job[running].pid = newChild(job[running]); //fork a new child
 					}
 					else if(previous == running){;} //keep running
 					else{
-                 		fprintf(stderr, "job %d restarts\n", running);
 						WakeUp(job[running].pid); //Wake up the child
 					}
 					findAgain = 0;
@@ -152,7 +147,6 @@ int main(int argc, char* argv[]){
             }
             else{ //some thing is running
                 if(job[running].progress >= job[running].execTime){ //the running job finished
-                    fprintf(stderr, "job %d finishes\n", running);
 					if(running == next){ //update the next task
 						while(next < numberOfProcess && job[next].progress >= job[next].execTime){
 							next = next + 1;
@@ -170,7 +164,6 @@ int main(int argc, char* argv[]){
 					continue;
 				}
 			}
-            fprintf(stderr, "time = %d next = %d\n", time, next);
             busy();
             time++;
             job[running].progress++;
@@ -211,11 +204,9 @@ int main(int argc, char* argv[]){
 					}
 					//wake it up or fork it
 					if(job[running].progress == 0){
-                 		fprintf(stderr, "job %d starts\n", running);
 						job[running].pid = newChild(job[running]); //fork a new child
 					}
 					else{
-                 		fprintf(stderr, "job %d restarts\n", running);
 						WakeUp(job[running].pid); //Wake up the child
 					}
 					findAgain = 0;
@@ -224,7 +215,6 @@ int main(int argc, char* argv[]){
             }
             else{ //some thing is running
                 if(job[running].progress >= job[running].execTime){ //the running job finished
-                    fprintf(stderr, "job %d finishes, Its pid = %d\n", running, job[running].pid);
 					if(running == next){ //update the next task
 						while(next < numberOfProcess && job[next].progress >= job[next].execTime){
 							next = next + 1;
@@ -245,7 +235,6 @@ int main(int argc, char* argv[]){
 					else{;} // the running job keep running
 				}
 			}
-        	fprintf(stderr, "time = %d next = %d\n", time, next);
             busy();
             time++;
 			usedTime++;
