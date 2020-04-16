@@ -17,12 +17,10 @@ Process* job;
 
 int main(int argc, char* argv[]){
 
-	/*
 	//set parent's CPU to CPU_0
 	AssignCpu(getpid(), 0);
 	//set high priority
 	WakeUp(getpid());
-	*/
 
 	//IO
 	scanf("%s", schedulingPolicy);
