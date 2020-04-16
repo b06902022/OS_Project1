@@ -28,9 +28,20 @@ int AssignCpu(pid_t pid, int core){
 int WakeUp(pid_t pid){
     struct sched_param param;
     param.sched_priority = 0;
-    int tmp = sched_setscheduler(pid, SCHED_OTHER, &param); //set CHED_OTHER's priority to 0
+    int tmp = sched_setscheduler(pid, SCHED_OTHER, &param); //set high priority
     if (tmp < 0) {
-        fprintf(stderr, "Failed to sched_setscheduler().\n");
+        fprintf(stderr, "Failed to sched_setscheduler(OTHER). %d %d\n", errno, pid);
+        return -1;
+    }
+    return tmp;
+}
+
+int Block(pid_t pid){
+	struct sched_param param;
+    param.sched_priority = 0;
+    int tmp = sched_setscheduler(pid, SCHED_IDLE, &param); //set low priority
+    if(tmp < 0){
+        fprintf(stderr, "Failed to sched_setscheduler(IDLE).\n");
         return -1;
     }
     return tmp;

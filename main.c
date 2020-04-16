@@ -134,11 +134,13 @@ int main(int argc, char* argv[]){
 							requirement = job[i].execTime - job[i].progress;
 						}
 					}
-					if(job[running].progress == 0){
+					if(findAgain == 1 && previous == running){;} //keep running
+					else if(job[running].progress == 0){
+						if(findAgain == 1) Block(job[previous].pid);
 						job[running].pid = newChild(job[running]); //fork a new child
 					}
-					else if(previous == running){;} //keep running
 					else{
+						if(findAgain == 1) Block(job[previous].pid);
 						WakeUp(job[running].pid); //Wake up the child
 					}
 					findAgain = 0;
@@ -161,6 +163,7 @@ int main(int argc, char* argv[]){
                 }
                 else{ // find the shortest job again 
 					findAgain = 1;
+					previous = running;
 					continue;
 				}
 			}
@@ -178,6 +181,7 @@ int main(int argc, char* argv[]){
         int next = 0;
 		int usedTime = 0;
 		int findAgain = 0;
+		int previous;
         while(numberOfDone < numberOfProcess){
             if(running == -1 || findAgain == 1){ //nothing is running
                 if(time >= job[next].readyTime || findAgain == 1){ // the next job is ok to run
@@ -203,10 +207,13 @@ int main(int argc, char* argv[]){
 						fprintf(stderr, "This should not happen...\n");
 					}
 					//wake it up or fork it
-					if(job[running].progress == 0){
+					if(findAgain == 1 && previous == running){;} //keep running
+					else if(job[running].progress == 0){
+						if(findAgain == 1) Block(job[previous].pid);
 						job[running].pid = newChild(job[running]); //fork a new child
 					}
 					else{
+						if(findAgain == 1) Block(job[previous].pid);
 						WakeUp(job[running].pid); //Wake up the child
 					}
 					findAgain = 0;
@@ -230,6 +237,7 @@ int main(int argc, char* argv[]){
                 else{ 
             		if(usedTime == 500){//context switch
 						findAgain = 1;
+						previous = running;
 						continue;
 					}
 					else{;} // the running job keep running
@@ -239,6 +247,7 @@ int main(int argc, char* argv[]){
             time++;
 			usedTime++;
             job[running].progress++;
+			previous = running;
 		}
 	}
 	else{
